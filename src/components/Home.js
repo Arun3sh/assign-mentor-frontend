@@ -6,6 +6,12 @@ function Home() {
 	return (
 		<div className="home-wrapper">
 			<div className="home-container">
+				<Button variant="text" onClick={() => history.push('/create-student')}>
+					Create Student
+				</Button>
+				<Button variant="text" onClick={() => history.push('/create-mentor')}>
+					Create Mentor
+				</Button>
 				<Button variant="text" onClick={() => history.push('/students')}>
 					View Students
 				</Button>
