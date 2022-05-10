@@ -7,18 +7,19 @@ import { student_api } from '../global';
 function Students() {
 	const history = useHistory();
 	const [student, setStudent] = useState([]);
+
+	// To get all student info on page load
 	useEffect(() => {
 		const getStudents = async () => {
-			console.log('data');
 			await axios
 				.get(`${student_api}`)
 				.then(({ data }) => setStudent(data))
 				.catch((err) => alert('Error', err));
 		};
 		getStudents();
-		console.log(student);
 	}, []);
 
+	// When the api is fetching data this is displayed or when there is no student data
 	if (student.length === 0) {
 		return (
 			<div className="students-wrapper">
@@ -28,8 +29,18 @@ function Students() {
 	}
 	return (
 		<div className="students-wrapper">
+			{/* Button to goback to main menu */}
+			<Button
+				variant="outlined"
+				color="error"
+				style={{ width: '25px' }}
+				onClick={() => history.push('/')}
+			>
+				Back
+			</Button>
 			<div className="students-container">
 				{student.map(({ _id, name, email, batch, mentor_assigned }, index) => (
+					// Card that holds user info
 					<div className="card" key={index}>
 						<div className="card-div">
 							<h5>Name </h5>
@@ -48,7 +59,11 @@ function Students() {
 
 						<div className="card-div">
 							<h5>Mentor </h5>
-							<p>{mentor_assigned.mentor_name}</p>
+							<p>
+								{mentor_assigned !== undefined
+									? mentor_assigned.mentor_name
+									: 'Please selcet a mentor'}
+							</p>
 						</div>
 
 						<Button
