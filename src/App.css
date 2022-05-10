@@ -15,21 +15,38 @@ li {
 	flex-direction: column;
 }
 .students-container,
-.mentors-container {
+.mentors-wrapper,
+.students-wrapper,
+.mentors-container,
+.create-student-container,
+.add-mentee-container {
 	margin: 20px;
 	padding: 20px;
 	display: flex;
 	flex-direction: column;
 	gap: 25px;
 }
+
+.create-student-container {
+	align-items: center;
+}
 .card {
 	display: flex;
 	flex-direction: column;
-	align-items: flex-start;
 	gap: 10px;
 }
 .card-div {
 	display: flex;
 	gap: 20px;
 	align-items: center;
+}
+.create-student-form {
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
+}
+.btn-div {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-around;
 }
