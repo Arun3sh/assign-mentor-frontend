@@ -1,12 +1,8 @@
 import { Button, MenuItem, Select } from '@mui/material';
 import axios from 'axios';
-import { useFormik } from 'formik';
-import * as yup from 'yup';
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
 import { useHistory } from 'react-router-dom';
 import { mentor_api, student_api } from '../global';
-import { SelectChangeEvent } from '@mui/material/Select';
 
 function Changementor() {
 	const params = new URLSearchParams(document.location.search);
@@ -29,20 +25,25 @@ function Changementor() {
 				.then((res) => {
 					setMentor(res[0].data);
 					setStudent(res[1].data);
-					setFilter(res[1].data[0].mentor_assigned.mentor_id);
+					res[1].data[0].mentor_assigned !== undefined
+						? setFilter(res[1].data[0].mentor_assigned.mentor_id)
+						: setFilter(1);
 				})
 				.catch((err) => alert(err));
 		};
 		getMentors();
-		console.log(student);
 	}, []);
 
 	const setNewMentor = async () => {
+		const oldId =
+			student[0].mentor_assigned !== undefined ? student[0].mentor_assigned.mentor_id : undefined;
+		const oldName =
+			student[0].mentor_assigned !== undefined ? student[0].mentor_assigned.mentor_name : undefined;
 		let changeMentorData = {
 			student_id: student_id,
 			student_name: student_name,
-			old_mentor_id: student[0].mentor_assigned.mentor_id,
-			old_mentor_name: student[0].mentor_assigned.mentor_name,
+			old_mentor_id: oldId,
+			old_mentor_name: oldName,
 			mentor_id: mentorId,
 			mentor_name: selectValue,
 		};
@@ -51,7 +52,9 @@ function Changementor() {
 			url: `${student_api}/add-mentor/${student_id}`,
 			method: 'PUT',
 			data: changeMentorData,
-		}).catch((err) => alert(err));
+		})
+			.then(() => history.push('/students'))
+			.catch((err) => alert(err));
 	};
 
 	if (mentor.length === 0) {
@@ -67,7 +70,7 @@ function Changementor() {
 			<div className="changementor-container">
 				<form className="card">
 					<div className="card-div">
-						<p>Current Mentor</p>
+						<p>Current Mentor - </p>
 						{mentor
 							.filter(({ _id }) => _id === filter)
 							.map(({ name }, index) => (
@@ -92,13 +95,15 @@ function Changementor() {
 								</MenuItem>
 							))}
 					</Select>
-					<Button
-						onClick={() => console.log(selectValue) & setNewMentor()}
-						variant="outlined"
-						color="success"
-					>
-						Submit
-					</Button>
+
+					<div className="btn-div">
+						<Button onClick={() => setNewMentor()} variant="outlined" color="success">
+							Submit
+						</Button>
+						<Button variant="outlined" color="error" onClick={() => history.goBack()}>
+							Cancel
+						</Button>
+					</div>
 				</form>
 			</div>
 		</div>
